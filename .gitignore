@@ -134,13 +134,35 @@ reports/
 ehthumbs.db
 Thumbs.db
 
-# API Keys and Secrets (DOUBLE CHECK)
+# API Keys and Secrets (CRITICAL SECURITY)
 *api_key*
 *secret*
 *token*
 *password*
+*credentials*
 config/secrets.py
 config/keys.py
+config/api_keys.js
+secrets.json
+credentials.json
+
+# Development environment files
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDE and editor files with potential secrets
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files that might contain secrets
+*.backup
+*.bak
+*.orig
 
 # Temporary files
 *.tmp

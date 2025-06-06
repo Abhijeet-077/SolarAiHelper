@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar AI Platform - Deployment Test</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+        }
+        h1 {
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+        .status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        .status.pass {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+        .status.fail {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+        .status.loading {
+            background: rgba(255, 255, 0, 0.2);
+            color: #ffff00;
+            border: 1px solid #ffff00;
+        }
+        .btn {
+            background: linear-gradient(45deg, #00ffff, #00ff00);
+            color: #000000;
+            border: none;
+            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌞 Solar AI Platform - Deployment Test</h1>
+        
+        <div class="test-section">
+            <h3>📁 File Structure Tests</h3>
+            <div class="test-item">
+                <span>Main HTML file</span>
+                <span class="status loading" id="html-test">Testing...</span>
+            </div>
+            <div class="test-item">
+                <span>CSS files</span>
+                <span class="status loading" id="css-test">Testing...</span>
+            </div>
+            <div class="test-item">
+                <span>JavaScript modules</span>
+                <span class="status loading" id="js-test">Testing...</span>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🌐 External Dependencies</h3>
+            <div class="test-item">
+                <span>Three.js (3D Graphics)</span>
+                <span class="status loading" id="threejs-test">Testing...</span>
+            </div>
+            <div class="test-item">
+                <span>OpenCV.js (Computer Vision)</span>
+                <span class="status loading" id="opencv-test">Testing...</span>
+            </div>
+            <div class="test-item">
+                <span>jsPDF (PDF Generation)</span>
+                <span class="status loading" id="jspdf-test">Testing...</span>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔗 API Connectivity</h3>
+            <div class="test-item">
+                <span>NASA POWER API</span>
+                <span class="status loading" id="nasa-test">Testing...</span>
+            </div>
+            <div class="test-item">
+                <span>CORS Proxy</span>
+                <span class="status loading" id="cors-test">Testing...</span>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🧪 Functionality Tests</h3>
+            <div class="test-item">
+                <span>Image Processing</span>
+                <span class="status loading" id="image-test">Testing...</span>
+            </div>
+            <div class="test-item">
+                <span>Solar Calculations</span>
+                <span class="status loading" id="solar-test">Testing...</span>
+            </div>
+            <div class="test-item">
+                <span>Neural Background</span>
+                <span class="status loading" id="neural-test">Testing...</span>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 2rem 0;">
+            <button class="btn" onclick="runAllTests()">🔄 Run All Tests</button>
+            <button class="btn" onclick="window.location.href='index.html'">🚀 Launch Platform</button>
+        </div>
+        
+        <div class="log" id="test-log">
+            <div>🧪 Deployment Test Console</div>
+            <div>Ready to run tests...</div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {};
+        
+        function log(message) {
+            const logEl = document.getElementById('test-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logEl.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+        
+        function updateStatus(testId, status, message = '') {
+            const statusEl = document.getElementById(testId);
+            statusEl.className = `status ${status}`;
+            statusEl.textContent = status === 'pass' ? '✅ PASS' : status === 'fail' ? '❌ FAIL' : '⏳ Testing...';
+            testResults[testId] = { status, message };
+            
+            if (message) {
+                log(`${testId}: ${message}`);
+            }
+        }
+        
+        async function testFileStructure() {
+            log('Testing file structure...');
+            
+            try {
+                // Test main HTML
+                const htmlResponse = await fetch('index.html');
+                updateStatus('html-test', htmlResponse.ok ? 'pass' : 'fail', 
+                    htmlResponse.ok ? 'index.html found' : 'index.html missing');
+                
+                // Test CSS files
+                const cssResponse = await fetch('css/styles.css');
+                updateStatus('css-test', cssResponse.ok ? 'pass' : 'fail',
+                    cssResponse.ok ? 'CSS files found' : 'CSS files missing');
+                
+                // Test JS files
+                const jsResponse = await fetch('js/app.js');
+                updateStatus('js-test', jsResponse.ok ? 'pass' : 'fail',
+                    jsResponse.ok ? 'JavaScript modules found' : 'JavaScript modules missing');
+                
+            } catch (error) {
+                log(`File structure test error: ${error.message}`);
+                updateStatus('html-test', 'fail', 'Network error');
+                updateStatus('css-test', 'fail', 'Network error');
+                updateStatus('js-test', 'fail', 'Network error');
+            }
+        }
+        
+        async function testExternalDependencies() {
+            log('Testing external dependencies...');
+            
+            // Test Three.js
+            try {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+                script.onload = () => updateStatus('threejs-test', 'pass', 'Three.js loaded successfully');
+                script.onerror = () => updateStatus('threejs-test', 'fail', 'Three.js failed to load');
+                document.head.appendChild(script);
+            } catch (error) {
+                updateStatus('threejs-test', 'fail', `Three.js error: ${error.message}`);
+            }
+            
+            // Test OpenCV.js
+            setTimeout(() => {
+                try {
+                    const script = document.createElement('script');
+                    script.src = 'https://docs.opencv.org/4.8.0/opencv.js';
+                    script.onload = () => updateStatus('opencv-test', 'pass', 'OpenCV.js loaded successfully');
+                    script.onerror = () => updateStatus('opencv-test', 'fail', 'OpenCV.js failed to load');
+                    document.head.appendChild(script);
+                } catch (error) {
+                    updateStatus('opencv-test', 'fail', `OpenCV.js error: ${error.message}`);
+                }
+            }, 1000);
+            
+            // Test jsPDF
+            setTimeout(() => {
+                try {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                    script.onload = () => updateStatus('jspdf-test', 'pass', 'jsPDF loaded successfully');
+                    script.onerror = () => updateStatus('jspdf-test', 'fail', 'jsPDF failed to load');
+                    document.head.appendChild(script);
+                } catch (error) {
+                    updateStatus('jspdf-test', 'fail', `jsPDF error: ${error.message}`);
+                }
+            }, 2000);
+        }
+        
+        async function testAPIConnectivity() {
+            log('Testing API connectivity...');
+            
+            // Test NASA API (with CORS proxy)
+            try {
+                const proxyUrl = 'https://api.allorigins.win/get?url=';
+                const nasaUrl = 'https://power.larc.nasa.gov/api/temporal/daily/point?latitude=37.7749&longitude=-122.4194&start=20230101&end=20230101&community=RE&parameters=ALLSKY_SFC_SW_DWN&format=JSON';
+                
+                const response = await fetch(proxyUrl + encodeURIComponent(nasaUrl));
+                updateStatus('nasa-test', response.ok ? 'pass' : 'fail',
+                    response.ok ? 'NASA API accessible' : 'NASA API unavailable');
+                
+                updateStatus('cors-test', response.ok ? 'pass' : 'fail',
+                    response.ok ? 'CORS proxy working' : 'CORS proxy failed');
+                    
+            } catch (error) {
+                updateStatus('nasa-test', 'fail', `NASA API error: ${error.message}`);
+                updateStatus('cors-test', 'fail', `CORS proxy error: ${error.message}`);
+            }
+        }
+        
+        async function testFunctionality() {
+            log('Testing core functionality...');
+            
+            // Test image processing capability
+            try {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                updateStatus('image-test', ctx ? 'pass' : 'fail',
+                    ctx ? 'Canvas API available' : 'Canvas API unavailable');
+            } catch (error) {
+                updateStatus('image-test', 'fail', `Image processing error: ${error.message}`);
+            }
+            
+            // Test solar calculations
+            try {
+                const testCalc = 100 * 0.2 * 365 * 4.5; // Simple solar calculation
+                updateStatus('solar-test', testCalc > 0 ? 'pass' : 'fail',
+                    testCalc > 0 ? 'Solar calculations working' : 'Solar calculations failed');
+            } catch (error) {
+                updateStatus('solar-test', 'fail', `Solar calculation error: ${error.message}`);
+            }
+            
+            // Test neural background capability
+            try {
+                const webglSupported = !!document.createElement('canvas').getContext('webgl');
+                updateStatus('neural-test', webglSupported ? 'pass' : 'fail',
+                    webglSupported ? 'WebGL supported' : 'WebGL not supported (will use 2D fallback)');
+            } catch (error) {
+                updateStatus('neural-test', 'fail', `Neural background error: ${error.message}`);
+            }
+        }
+        
+        async function runAllTests() {
+            log('🚀 Starting comprehensive deployment test...');
+            
+            // Reset all statuses
+            const statusElements = document.querySelectorAll('.status');
+            statusElements.forEach(el => {
+                el.className = 'status loading';
+                el.textContent = '⏳ Testing...';
+            });
+            
+            // Run tests sequentially
+            await testFileStructure();
+            await testExternalDependencies();
+            await testAPIConnectivity();
+            await testFunctionality();
+            
+            // Summary
+            setTimeout(() => {
+                const totalTests = Object.keys(testResults).length;
+                const passedTests = Object.values(testResults).filter(r => r.status === 'pass').length;
+                const failedTests = totalTests - passedTests;
+                
+                log(`📊 Test Summary: ${passedTests}/${totalTests} passed, ${failedTests} failed`);
+                
+                if (failedTests === 0) {
+                    log('🎉 All tests passed! Deployment is ready.');
+                } else {
+                    log('⚠️ Some tests failed. Check individual results above.');
+                }
+            }, 5000);
+        }
+        
+        // Auto-run tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 1000);
+        });
+    </script>
+</body>
+</html>

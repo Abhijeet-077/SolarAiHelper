@@ -4,6 +4,7 @@ Creates interactive Three.js-based roof modeling with solar panel simulation
 """
 
 import streamlit as st
+import streamlit.components.v1 as components
 import json
 from typing import Dict, Any, List
 import base64
@@ -233,7 +234,7 @@ class Solar3DVisualizer:
         })
         
         # Display the 3D scene
-        st.components.v1.html(threejs_html, height=500)
+        components.html(threejs_html, height=500)
     
     def _generate_threejs_html(self, scene_data: Dict[str, Any], 
                               options: Dict[str, Any]) -> str:
@@ -681,12 +682,14 @@ try:
     import numpy as np
 except ImportError:
     # Fallback for basic math operations
-    class np:
+    import math
+
+    class NumpyFallback:
         @staticmethod
         def tan(x):
-            import math
             return math.tan(x)
         @staticmethod
         def radians(x):
-            import math
             return math.radians(x)
+
+    np = NumpyFallback()

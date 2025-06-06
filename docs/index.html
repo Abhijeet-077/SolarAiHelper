@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Powered Solar Rooftop Analysis with 3D Neural Network Visualization">
+    <meta name="keywords" content="solar, AI, rooftop analysis, neural network, renewable energy">
+    <meta name="author" content="Solar AI Platform">
+
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self';
+                   script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://docs.opencv.org https://threejs.org;
+                   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                   connect-src 'self' https://generativelanguage.googleapis.com https://power.larc.nasa.gov https://api.allorigins.win;
+                   img-src 'self' data: blob:;
+                   font-src 'self' https://fonts.gstatic.com;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourusername.github.io/solar-ai-platform/">
+    <meta property="og:title" content="Solar AI Platform - AI-Powered Solar Analysis">
+    <meta property="og:description" content="Analyze satellite imagery, calculate solar potential, and generate comprehensive reports with cutting-edge AI technology">
+    <meta property="og:image" content="https://yourusername.github.io/solar-ai-platform/assets/preview.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourusername.github.io/solar-ai-platform/">
+    <meta property="twitter:title" content="Solar AI Platform - AI-Powered Solar Analysis">
+    <meta property="twitter:description" content="Analyze satellite imagery, calculate solar potential, and generate comprehensive reports with cutting-edge AI technology">
+    <meta property="twitter:image" content="https://yourusername.github.io/solar-ai-platform/assets/preview.png">
+
+    <title>🌞 Solar AI Platform - AI-Powered Solar Analysis</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://docs.opencv.org/4.8.0/opencv.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/neural.css">
+</head>
+<body>
+    <!-- Neural Network Background -->
+    <div id="neural-background"></div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">🌞 Solar AI Platform</h1>
+            <p class="subtitle">AI-Powered Solar Rooftop Analysis with 3D Neural Network Visualization</p>
+            <div class="api-notice" id="api-notice">
+                <h3>🔑 Enhanced Features Available</h3>
+                <p>Configure your Google Gemini API key for advanced AI recommendations</p>
+                <button class="btn-small" onclick="showApiModal()">Configure API Key</button>
+            </div>
+        </header>
+        
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+            <div class="step active" id="step-1">
+                <span>1️⃣ Upload</span>
+            </div>
+            <div class="step" id="step-2">
+                <span>2️⃣ Configure</span>
+            </div>
+            <div class="step" id="step-3">
+                <span>3️⃣ Analyze</span>
+            </div>
+            <div class="step" id="step-4">
+                <span>4️⃣ Results</span>
+            </div>
+        </div>
+        
+        <!-- Section 1: Upload Image -->
+        <section class="section active" id="section-1">
+            <div class="card">
+                <h2>📸 Upload Satellite Image</h2>
+                <div class="file-upload" id="file-upload">
+                    <div class="upload-icon">📁</div>
+                    <p><strong>Click to upload</strong> or drag and drop your satellite image here</p>
+                    <p class="upload-hint">Supported formats: JPG, PNG, JPEG (Max 10MB)</p>
+                    <input type="file" id="file-input" accept="image/*">
+                </div>
+                <div id="image-preview-container" style="display: none;">
+                    <img id="image-preview" class="image-preview" alt="Uploaded image preview">
+                    <p class="success-message">✅ Image uploaded successfully!</p>
+                </div>
+                <div class="button-group">
+                    <button class="btn" id="continue-btn" onclick="goToStep(2)" disabled>
+                        🚀 Continue to Configuration
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Sample Images -->
+            <div class="card">
+                <h2>🧪 Try Sample Images</h2>
+                <p>Don't have a satellite image? Try one of our sample images:</p>
+                <div class="sample-grid">
+                    <button class="btn-sample" onclick="loadSampleImage('residential')">
+                        <span>🏠</span>
+                        <span>Residential Roof</span>
+                    </button>
+                    <button class="btn-sample" onclick="loadSampleImage('commercial')">
+                        <span>🏢</span>
+                        <span>Commercial Building</span>
+                    </button>
+                    <button class="btn-sample" onclick="loadSampleImage('complex')">
+                        <span>🏘️</span>
+                        <span>Complex Roof</span>
+                    </button>
+                    <button class="btn-sample" onclick="loadSampleImage('angled')">
+                        <span>🏔️</span>
+                        <span>Angled Roof</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 2: Configuration -->
+        <section class="section" id="section-2">
+            <div class="card">
+                <h2>⚙️ Analysis Configuration</h2>
+                <div class="config-grid">
+                    <div class="config-group">
+                        <h3>📍 Location</h3>
+                        <div class="form-group">
+                            <label for="latitude">Latitude</label>
+                            <input type="number" id="latitude" class="form-control" 
+                                   placeholder="37.7749" step="0.0001" value="37.7749">
+                        </div>
+                        <div class="form-group">
+                            <label for="longitude">Longitude</label>
+                            <input type="number" id="longitude" class="form-control" 
+                                   placeholder="-122.4194" step="0.0001" value="-122.4194">
+                        </div>
+                    </div>
+                    <div class="config-group">
+                        <h3>💰 Financial</h3>
+                        <div class="form-group">
+                            <label for="electricity-rate">Electricity Rate ($/kWh)</label>
+                            <input type="number" id="electricity-rate" class="form-control" 
+                                   placeholder="0.20" step="0.01" value="0.20">
+                        </div>
+                        <div class="form-group">
+                            <label for="installation-cost">Installation Cost ($/Watt)</label>
+                            <input type="number" id="installation-cost" class="form-control" 
+                                   placeholder="3.00" step="0.01" value="3.00">
+                        </div>
+                    </div>
+                    <div class="config-group">
+                        <h3>🔋 System</h3>
+                        <div class="form-group">
+                            <label for="panel-type">Panel Type</label>
+                            <select id="panel-type" class="form-control">
+                                <option value="monocrystalline">Monocrystalline (High Efficiency)</option>
+                                <option value="polycrystalline">Polycrystalline (Standard)</option>
+                                <option value="thin-film">Thin Film (Flexible)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="system-size">System Size Preference</label>
+                            <select id="system-size" class="form-control">
+                                <option value="optimal">Optimal (Recommended)</option>
+                                <option value="maximum">Maximum Possible</option>
+                                <option value="budget">Budget Friendly</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Location Buttons -->
+                <div class="location-buttons">
+                    <h3>🌍 Quick Locations</h3>
+                    <div class="location-grid">
+                        <button class="btn-location" onclick="setLocation(37.7749, -122.4194)">🌉 San Francisco</button>
+                        <button class="btn-location" onclick="setLocation(34.0522, -118.2437)">🌴 Los Angeles</button>
+                        <button class="btn-location" onclick="setLocation(40.7128, -74.0060)">🗽 New York</button>
+                        <button class="btn-location" onclick="setLocation(41.8781, -87.6298)">🏙️ Chicago</button>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn" onclick="startAnalysis()">🔄 Start Analysis</button>
+                    <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Analysis -->
+        <section class="section" id="section-3">
+            <div class="card">
+                <h2>🤖 AI Analysis in Progress</h2>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="progress-text">Initializing analysis...</div>
+                </div>
+                
+                <div class="analysis-steps" id="analysis-steps">
+                    <div class="analysis-step" id="step-image">
+                        <span class="loading"></span> 🔍 Analyzing image structure...
+                    </div>
+                    <div class="analysis-step hidden" id="step-roof">
+                        <span class="loading"></span> 🏠 Detecting roof boundaries...
+                    </div>
+                    <div class="analysis-step hidden" id="step-dimensions">
+                        <span class="loading"></span> 📐 Calculating roof dimensions...
+                    </div>
+                    <div class="analysis-step hidden" id="step-solar">
+                        <span class="loading"></span> ☀️ Fetching solar irradiance data...
+                    </div>
+                    <div class="analysis-step hidden" id="step-ai">
+                        <span class="loading"></span> 🤖 Generating AI recommendations...
+                    </div>
+                </div>
+                
+                <div class="analysis-info">
+                    <p>This may take 10-30 seconds depending on image complexity...</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 4: Results -->
+        <section class="section" id="section-4">
+            <div class="card">
+                <h2>📊 Analysis Results</h2>
+                <div class="results-grid" id="results-grid">
+                    <!-- Results populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🏠 Detailed Analysis</h2>
+                <div class="analysis-details" id="analysis-details">
+                    <!-- Detailed analysis populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>🤖 AI Recommendations</h2>
+                <div class="ai-recommendations" id="ai-recommendations">
+                    <!-- AI recommendations populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📄 Generate Report</h2>
+                <p>Download a comprehensive PDF report with all analysis results and recommendations.</p>
+                <div class="button-group">
+                    <button class="btn" onclick="generatePDFReport()">📄 Download PDF Report</button>
+                    <button class="btn btn-secondary" onclick="resetAnalysis()">🔄 Analyze Another Image</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- API Key Modal -->
+    <div id="api-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>🔑 API Configuration</h3>
+            <p>For enhanced AI recommendations, configure your Google Gemini API key:</p>
+            <div class="form-group">
+                <label for="google-api-key">Google Gemini API Key (Optional)</label>
+                <input type="password" id="google-api-key" class="form-control" placeholder="Enter your API key">
+            </div>
+            <p class="api-help">
+                Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a>
+            </p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeApiModal()">Skip</button>
+                <button class="btn" onclick="saveApiKey()">Save & Continue</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="js/security-validator.js"></script>
+    <script src="js/neural-background.js"></script>
+    <script src="js/image-processing.js"></script>
+    <script src="js/solar-calculations.js"></script>
+    <script src="js/ai-integration.js"></script>
+    <script src="js/pdf-generator.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
