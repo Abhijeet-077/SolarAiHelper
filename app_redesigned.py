@@ -143,7 +143,7 @@ def render_upload_section():
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             image = Image.open(uploaded_file)
-            st.image(image, caption="Uploaded Roof Image", use_column_width=True)
+            st.image(image, caption="Uploaded Roof Image", use_container_width=True)
             
             # Image validation
             try:
@@ -164,7 +164,7 @@ def render_upload_section():
                     st.error("❌ Image file too large. Please use an image under 10MB.")
         
         # Quick analysis preview
-        if validation_result['valid']:
+        if st.session_state.analysis_step == 'configure':
             with st.expander("🔍 Quick Image Analysis", expanded=False):
                 try:
                     analyzer = RoofAnalyzer()
@@ -180,7 +180,7 @@ def render_upload_section():
                     with col2:
                         st.metric("Estimated Orientation", quick_analysis.get('orientation', 'Unknown'))
                     with col3:
-                        st.metric("Image Quality", "Good" if validation_result['valid'] else "Poor")
+                        st.metric("Image Quality", "Good")
                     
                     os.unlink(temp_path)
                 except Exception as e:
@@ -370,7 +370,7 @@ def render_analysis_progress():
         
         nasa_provider = NASADataProvider()
         config = st.session_state.configuration
-        solar_data = nasa_provider.get_solar_irradiance(config['latitude'], config['longitude'])
+        solar_data = nasa_provider.get_irradiance_data(config['latitude'], config['longitude'])
         time.sleep(2)
         
         # Step 4: Financial calculations
@@ -378,7 +378,7 @@ def render_analysis_progress():
         progress_bar.progress(75)
         
         calculator = SolarCalculator()
-        financial_analysis = calculator.calculate_comprehensive_analysis(
+        financial_analysis = calculator.calculate_solar_potential(
             roof_analysis, solar_data, config
         )
         time.sleep(1)
@@ -388,7 +388,7 @@ def render_analysis_progress():
         progress_bar.progress(90)
         
         llm_generator = LLMGenerator()
-        ai_recommendations = llm_generator.generate_installation_recommendations(
+        ai_recommendations = llm_generator.generate_recommendations(
             roof_analysis, solar_data, financial_analysis
         )
         time.sleep(1)
@@ -637,7 +637,7 @@ def generate_pdf_report(results):
     """Generate comprehensive PDF report"""
     try:
         report_generator = ReportGenerator()
-        pdf_buffer = report_generator.generate_comprehensive_report(
+        pdf_buffer = report_generator.generate_report(
             results['roof_analysis'],
             results['solar_data'],
             results['financial_analysis'],
@@ -651,10 +651,10 @@ def generate_pdf_report(results):
             mime="application/pdf",
             type="primary"
         )
-        st.success("✅ PDF report generated successfully!")
+        st.success("PDF report generated successfully!")
         
     except Exception as e:
-        st.error(f"❌ Report generation failed: {str(e)}")
+        st.error(f"Report generation failed: {str(e)}")
 
 def generate_technical_spec(results):
     """Generate technical specification document"""
