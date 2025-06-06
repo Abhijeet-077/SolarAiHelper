@@ -11,7 +11,7 @@ class NASADataProvider:
     
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.api_key = os.getenv("NASA_API_KEY", "WekG8UA5eeLffk8QH4aBc9TytlZAbsmDD3d4Tgm")
+        self.api_key = os.getenv("NASA_API_KEY")
         self.base_url = "https://power.larc.nasa.gov/api/temporal"
         self.timeout = 30
         
