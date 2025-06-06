@@ -328,28 +328,29 @@ class EnvironmentValidator:
         self.logger = logging.getLogger(__name__)
     
     def validate_api_keys(self) -> Tuple[bool, str]:
-        """Validate that required API keys are available"""
-        
+        """Validate that required API keys are available using security manager"""
+
         try:
-            # Check Google LLM API key
-            google_key = os.getenv("GOOGLE_LLM_API_KEY")
-            if not google_key:
-                self.logger.warning("Google LLM API key not found in environment")
-                return False, "Google LLM API key not configured"
-            
-            if len(google_key) < 20:  # Basic length check
-                return False, "Google LLM API key appears invalid"
-            
-            # Check NASA API key
-            nasa_key = os.getenv("NASA_API_KEY")
-            if not nasa_key:
-                self.logger.warning("NASA API key not found in environment")
-                return False, "NASA API key not configured"
-            
-            if len(nasa_key) < 20:  # Basic length check
-                return False, "NASA API key appears invalid"
-            
-            return True, "API keys are configured"
+            # Import security manager for comprehensive validation
+            from utils.security import security_manager
+
+            # Use security manager's comprehensive validation
+            all_valid, status_dict = security_manager.validate_all_api_keys()
+
+            if all_valid:
+                self.logger.info("✅ All required API keys validated successfully")
+                return True, "All required API keys are configured and valid"
+            else:
+                # Log detailed status
+                for key, status in status_dict.items():
+                    if "❌" in status:
+                        self.logger.error(f"API Key Issue: {status}")
+                    elif "⚪" in status:
+                        self.logger.info(f"Optional: {status}")
+                    else:
+                        self.logger.info(f"Valid: {status}")
+
+                return False, "One or more required API keys are missing or invalid"
             
         except Exception as e:
             self.logger.error(f"API key validation error: {str(e)}")

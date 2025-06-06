@@ -6,14 +6,25 @@ from typing import Dict, List, Optional
 from datetime import datetime, timedelta
 import json
 
+# Import security manager for secure API key handling
+from utils.security import security_manager
+
 class NASADataProvider:
     """Integration with NASA POWER API for solar irradiance data"""
-    
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.api_key = os.getenv("NASA_API_KEY")
+
+        # Use security manager for API key validation
+        self.api_key = security_manager.get_api_key("NASA_API_KEY", required=False)
         self.base_url = "https://power.larc.nasa.gov/api/temporal"
-        self.timeout = 30
+        self.timeout = security_manager.get_config_value("API_TIMEOUT", 30, int)
+
+        # Log API key status
+        if self.api_key:
+            self.logger.info("✅ NASA API key configured and validated")
+        else:
+            self.logger.warning("⚠️  NASA API key not configured - using fallback solar data")
         
     def get_solar_data(self, latitude: float, longitude: float) -> Dict:
         """

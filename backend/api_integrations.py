@@ -8,20 +8,42 @@ import json
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 
+# Import security manager for secure API key handling
+from utils.security import security_manager
+
 class ExternalAPIManager:
     """
     Comprehensive API integration manager for solar analysis
     Integrates with NASA POWER, Google Maps, DSIRE, and other external services
     """
-    
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.nasa_api_key = os.getenv("NASA_API_KEY")
-        self.google_maps_key = os.getenv("GOOGLE_MAPS_API_KEY")
+
+        # Use security manager for API key validation
+        self.nasa_api_key = security_manager.get_api_key("NASA_API_KEY", required=False)
+        self.google_maps_key = security_manager.get_api_key("GOOGLE_MAPS_API_KEY", required=False)
+
+        # Get configuration values with fallbacks
+        self.api_timeout = security_manager.get_config_value("API_TIMEOUT", 30, int)
+        self.max_retries = security_manager.get_config_value("API_MAX_RETRIES", 3, int)
+        self.retry_delay = security_manager.get_config_value("API_RETRY_DELAY", 2, int)
+
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Solar-Analysis-Tool/1.0'
         })
+
+        # Log API key status
+        if self.nasa_api_key:
+            self.logger.info("✅ NASA API key configured")
+        else:
+            self.logger.warning("⚠️  NASA API key not configured - using fallback data")
+
+        if self.google_maps_key:
+            self.logger.info("✅ Google Maps API key configured")
+        else:
+            self.logger.info("ℹ️  Google Maps API key not configured - using basic geolocation")
         
     def get_comprehensive_location_data(self, latitude: float, longitude: float) -> Dict[str, Any]:
         """

@@ -15,11 +15,15 @@ class LLMGenerator:
     def _setup_api(self):
         """Initialize Google LLM API"""
         try:
-            api_key = os.getenv("GOOGLE_LLM_API_KEY")
+            # Import security manager for secure API key handling
+            from utils.security import security_manager
+
+            api_key = security_manager.get_api_key("GOOGLE_LLM_API_KEY", required=True)
             if not api_key:
-                raise ValueError("Google LLM API key not found")
-            
+                raise ValueError("Google LLM API key not found or invalid")
+
             genai.configure(api_key=api_key)
+            self.logger.info("✅ Google LLM API configured and validated")
             
             # Initialize the model
             self.model = genai.GenerativeModel(
