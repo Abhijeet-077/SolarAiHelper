@@ -18,15 +18,15 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Advanced Solar Analysis"
+args = "Solar Analysis Platform"
 
 [[workflows.workflow]]
-name = "Advanced Solar Analysis"
+name = "Solar Analysis Platform"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "streamlit run app_enhanced.py --server.port 5000"
+args = "streamlit run app_redesigned.py --server.port 5000"
 waitForPort = 5000
 
 [[ports]]
