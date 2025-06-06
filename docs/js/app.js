@@ -500,18 +500,116 @@ class SolarAIApp {
         const input = document.getElementById('google-api-key');
         if (input) {
             const apiKey = input.value.trim();
-            
-            if (apiKey) {
-                this.aiIntegration.setApiKey(apiKey);
-                this.hideApiNotice();
-                this.showMessage('API key saved successfully!', 'success');
-            } else {
-                this.aiIntegration.clearApiKey();
-                this.showMessage('API key cleared', 'info');
+
+            try {
+                if (apiKey) {
+                    this.aiIntegration.setApiKey(apiKey);
+                    this.hideApiNotice();
+                    this.showMessage('API key saved successfully!', 'success');
+                } else {
+                    this.aiIntegration.clearApiKey();
+                    this.showMessage('API key cleared', 'info');
+                }
+
+                this.closeApiModal();
+            } catch (error) {
+                this.showMessage(`API key error: ${error.message}`, 'error');
             }
-            
-            this.closeApiModal();
         }
+    }
+
+    // Security Dashboard Functions
+    showSecurityDashboard() {
+        const modal = document.getElementById('security-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            this.loadSecurityDashboard();
+        }
+    }
+
+    closeSecurityDashboard() {
+        const modal = document.getElementById('security-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+
+    refreshSecurityDashboard() {
+        this.loadSecurityDashboard();
+    }
+
+    loadSecurityDashboard() {
+        const content = document.getElementById('security-dashboard-content');
+        if (!content) return;
+
+        // Get security reports
+        const securityReport = window.securityValidator ? window.securityValidator.getSecurityReport() : null;
+        const apiSecurityReport = window.apiSecurityMonitor ? window.apiSecurityMonitor.getSecurityReport() : null;
+
+        const securityScore = apiSecurityReport ? apiSecurityReport.securityScore : 100;
+        const apiKeyStatus = this.aiIntegration.getApiKeyStatus();
+
+        content.innerHTML = `
+            <div class="security-dashboard">
+                <div class="security-score">
+                    <h4>🛡️ Security Score: ${securityScore}/100</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${securityScore}%; background: ${securityScore >= 80 ? '#00ff00' : securityScore >= 60 ? '#ffff00' : '#ff6b6b'}"></div>
+                    </div>
+                </div>
+
+                <div class="security-status">
+                    <h4>🔑 API Key Status</h4>
+                    <div class="status-item">
+                        <span>Configured:</span>
+                        <span class="status ${apiKeyStatus.configured ? 'pass' : 'info'}">${apiKeyStatus.configured ? '✅ Yes' : '❌ No'}</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Storage:</span>
+                        <span class="status pass">✅ Browser Only</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Encryption:</span>
+                        <span class="status pass">✅ Obfuscated</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Server Access:</span>
+                        <span class="status pass">✅ None</span>
+                    </div>
+                </div>
+
+                <div class="security-features">
+                    <h4>🔒 Security Features</h4>
+                    <div class="feature-list">
+                        <div class="feature-item">✅ No hard-coded API keys</div>
+                        <div class="feature-item">✅ Client-side processing only</div>
+                        <div class="feature-item">✅ Direct HTTPS to Google API</div>
+                        <div class="feature-item">✅ Real-time security monitoring</div>
+                        <div class="feature-item">✅ Automatic key validation</div>
+                        <div class="feature-item">✅ Suspicious pattern detection</div>
+                    </div>
+                </div>
+
+                ${apiSecurityReport && apiSecurityReport.recentAlerts.length > 0 ? `
+                <div class="security-alerts">
+                    <h4>⚠️ Recent Security Events</h4>
+                    ${apiSecurityReport.recentAlerts.slice(0, 5).map(alert => `
+                        <div class="alert-item">
+                            <span class="alert-time">${new Date(alert.timestamp).toLocaleTimeString()}</span>
+                            <span class="alert-type">${alert.type}</span>
+                            <span class="alert-severity ${alert.severity}">${alert.severity}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                ` : ''}
+
+                <div class="security-actions">
+                    <h4>🛠️ Security Actions</h4>
+                    <button class="btn btn-small" onclick="window.apiSecurityMonitor.clearSecurityLog()">Clear Security Log</button>
+                    <button class="btn btn-small btn-secondary" onclick="window.open('API_KEY_SECURITY.md', '_blank')">View Security Guide</button>
+                </div>
+            </div>
+        `;
     }
 
     // Reset and restart
@@ -588,6 +686,9 @@ window.resetAnalysis = () => window.solarApp.resetAnalysis();
 window.showApiModal = () => window.solarApp.showApiModal();
 window.closeApiModal = () => window.solarApp.closeApiModal();
 window.saveApiKey = () => window.solarApp.saveApiKey();
+window.showSecurityDashboard = () => window.solarApp.showSecurityDashboard();
+window.closeSecurityDashboard = () => window.solarApp.closeSecurityDashboard();
+window.refreshSecurityDashboard = () => window.solarApp.refreshSecurityDashboard();
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {

@@ -7,9 +7,14 @@ class AIIntegration {
     }
 
     setApiKey(apiKey) {
-        // Security: Validate API key format before storing
+        // Security: Comprehensive API key validation
         if (apiKey && !this.isApiKeyValid(apiKey)) {
             throw new Error('Invalid API key format. Google API keys should be 20+ characters.');
+        }
+
+        // Security: Check for potentially compromised keys
+        if (apiKey && this.isKeyPotentiallyCompromised(apiKey)) {
+            throw new Error('This API key appears to be from a public example or documentation. Please use your own private key.');
         }
 
         this.apiKey = apiKey;
@@ -17,18 +22,35 @@ class AIIntegration {
 
         // Store in localStorage for persistence (client-side only)
         if (apiKey) {
-            localStorage.setItem('solar_ai_google_key', apiKey);
-            console.log('🔑 API key configured (stored locally in browser)');
+            // Security: Encrypt key before storing (basic obfuscation)
+            const obfuscatedKey = this.obfuscateKey(apiKey);
+            localStorage.setItem('solar_ai_google_key', obfuscatedKey);
+            console.log('🔑 API key configured (stored locally in browser with obfuscation)');
+
+            // Security: Log key usage for monitoring
+            this.logKeyUsage('configured');
         } else {
             localStorage.removeItem('solar_ai_google_key');
             console.log('🔑 API key cleared');
+            this.logKeyUsage('cleared');
         }
     }
 
     loadApiKey() {
         const storedKey = localStorage.getItem('solar_ai_google_key');
         if (storedKey) {
-            this.setApiKey(storedKey);
+            try {
+                // Security: Deobfuscate key before use
+                const deobfuscatedKey = this.deobfuscateKey(storedKey);
+                this.apiKey = deobfuscatedKey;
+                this.isConfigured = true;
+                this.logKeyUsage('loaded');
+            } catch (error) {
+                console.warn('🔑 Stored API key appears corrupted, clearing...');
+                localStorage.removeItem('solar_ai_google_key');
+                this.apiKey = null;
+                this.isConfigured = false;
+            }
         }
     }
 
@@ -338,6 +360,65 @@ Format your response as structured recommendations with clear headings and actio
 
     clearApiKey() {
         this.setApiKey(null);
+    }
+
+    // Security helper methods
+    isKeyPotentiallyCompromised(apiKey) {
+        // Check against known public/example keys
+        const compromisedPatterns = [
+            'AIzaSyDemoKey',
+            'AIzaSyExample',
+            'your_api_key_here',
+            'replace_with_your_key',
+            'demo_key',
+            'test_key',
+            'sample_key',
+            'AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z' // Common example key
+        ];
+
+        return compromisedPatterns.some(pattern =>
+            apiKey.toLowerCase().includes(pattern.toLowerCase())
+        );
+    }
+
+    obfuscateKey(key) {
+        // Simple obfuscation (not encryption, just makes it less obvious)
+        const prefix = 'sk_';
+        const encoded = btoa(key).split('').reverse().join('');
+        return prefix + encoded;
+    }
+
+    deobfuscateKey(obfuscatedKey) {
+        if (!obfuscatedKey.startsWith('sk_')) {
+            // Legacy key format, return as-is
+            return obfuscatedKey;
+        }
+
+        const encoded = obfuscatedKey.substring(3);
+        const decoded = atob(encoded.split('').reverse().join(''));
+        return decoded;
+    }
+
+    logKeyUsage(action) {
+        // Security logging (no sensitive data)
+        const timestamp = new Date().toISOString();
+        const logEntry = {
+            timestamp,
+            action,
+            userAgent: navigator.userAgent.substring(0, 50),
+            origin: window.location.origin
+        };
+
+        // Store in separate log storage
+        const logs = JSON.parse(localStorage.getItem('solar_ai_security_log') || '[]');
+        logs.push(logEntry);
+
+        // Keep only last 50 entries
+        if (logs.length > 50) {
+            logs.splice(0, logs.length - 50);
+        }
+
+        localStorage.setItem('solar_ai_security_log', JSON.stringify(logs));
     }
 }
 

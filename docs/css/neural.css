@@ -362,17 +362,142 @@
     }
 }
 
+/* Security Dashboard Styles */
+.security-dashboard {
+    color: #ffffff;
+}
+
+.security-score {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.security-score h4 {
+    color: #00ffff;
+    margin-bottom: 1rem;
+}
+
+.security-status, .security-features, .security-alerts, .security-actions {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba(0, 255, 255, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.security-status h4, .security-features h4, .security-alerts h4, .security-actions h4 {
+    color: #00ffff;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+}
+
+.status-item .status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.status.pass {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00ff00;
+    border: 1px solid #00ff00;
+}
+
+.status.info {
+    background: rgba(0, 255, 255, 0.2);
+    color: #00ffff;
+    border: 1px solid #00ffff;
+}
+
+.feature-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+}
+
+.feature-item {
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    color: #ffffff;
+}
+
+.alert-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.alert-time {
+    color: #e0e0e0;
+    font-size: 0.8rem;
+}
+
+.alert-type {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.alert-severity {
+    padding: 0.25rem 0.5rem;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.alert-severity.high {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+}
+
+.alert-severity.medium {
+    background: rgba(255, 255, 0, 0.2);
+    color: #ffff00;
+    border: 1px solid #ffff00;
+}
+
+.alert-severity.low {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00ff00;
+    border: 1px solid #00ff00;
+}
+
+.security-actions {
+    text-align: center;
+}
+
+.security-actions .btn {
+    margin: 0.25rem;
+}
+
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
     .card {
         border-color: #ffffff;
         background: rgba(0, 0, 0, 0.95);
     }
-    
+
     .form-control {
         border-color: #ffffff;
     }
-    
+
     .btn {
         border-color: #ffffff;
     }

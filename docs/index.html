@@ -7,18 +7,26 @@
     <meta name="keywords" content="solar, AI, rooftop analysis, neural network, renewable energy">
     <meta name="author" content="Solar AI Platform">
 
-    <!-- Security Headers -->
+    <!-- Enhanced Security Headers -->
     <meta http-equiv="Content-Security-Policy"
           content="default-src 'self';
                    script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://docs.opencv.org https://threejs.org;
                    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
                    connect-src 'self' https://generativelanguage.googleapis.com https://power.larc.nasa.gov https://api.allorigins.win;
                    img-src 'self' data: blob:;
-                   font-src 'self' https://fonts.gstatic.com;">
+                   font-src 'self' https://fonts.gstatic.com;
+                   object-src 'none';
+                   base-uri 'self';
+                   form-action 'self';">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- API Key Security Notice -->
+    <meta name="api-key-policy" content="user-managed-only">
+    <meta name="data-privacy" content="client-side-processing-only">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -60,7 +68,11 @@
             <div class="api-notice" id="api-notice">
                 <h3>🔑 Enhanced Features Available</h3>
                 <p>Configure your Google Gemini API key for advanced AI recommendations</p>
-                <button class="btn-small" onclick="showApiModal()">Configure API Key</button>
+                <p><strong>🔒 Security Guarantee:</strong> Your API key is stored locally in your browser only and never shared with our servers.</p>
+                <div style="margin-top: 1rem;">
+                    <button class="btn-small" onclick="showApiModal()">Configure API Key</button>
+                    <button class="btn-small btn-secondary" onclick="showSecurityDashboard()" style="margin-left: 0.5rem;">Security Status</button>
+                </div>
             </div>
         </header>
         
@@ -275,7 +287,8 @@
                 <input type="password" id="google-api-key" class="form-control" placeholder="Enter your API key">
             </div>
             <p class="api-help">
-                Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a>
+                Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a><br>
+                <strong>🔒 Security:</strong> Your key is stored locally only. <a href="API_KEY_SECURITY.md" target="_blank">Security Details</a>
             </p>
             <div class="modal-buttons">
                 <button class="btn btn-secondary" onclick="closeApiModal()">Skip</button>
@@ -283,9 +296,25 @@
             </div>
         </div>
     </div>
+
+    <!-- Security Dashboard Modal -->
+    <div id="security-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px;">
+            <h3>🔒 API Key Security Dashboard</h3>
+            <div id="security-dashboard-content">
+                <div class="loading">Loading security status...</div>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeSecurityDashboard()">Close</button>
+                <button class="btn btn-secondary" onclick="refreshSecurityDashboard()">Refresh</button>
+            </div>
+        </div>
+    </div>
     
     <!-- Scripts -->
     <script src="js/security-validator.js"></script>
+    <script src="js/api-security-monitor.js"></script>
     <script src="js/neural-background.js"></script>
     <script src="js/image-processing.js"></script>
     <script src="js/solar-calculations.js"></script>
