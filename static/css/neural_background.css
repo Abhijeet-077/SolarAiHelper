@@ -1,0 +1,292 @@
+/* Neural Network Animated Background for Solar AI Platform */
+
+/* Base neural network container */
+.neural-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%);
+    z-index: -2;
+    overflow: hidden;
+}
+
+/* Neural network canvas overlay */
+.neural-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Animated neural nodes */
+.neural-node {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.8) 0%, rgba(0, 255, 255, 0.2) 70%, transparent 100%);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.6),
+        0 0 40px rgba(0, 255, 255, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+    animation: neuralPulse 3s ease-in-out infinite;
+}
+
+.neural-node.type-1 {
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.8) 0%, rgba(0, 255, 0, 0.2) 70%, transparent 100%);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 0, 0.6),
+        0 0 40px rgba(0, 255, 0, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+    animation-delay: -1s;
+}
+
+.neural-node.type-2 {
+    background: radial-gradient(circle, rgba(255, 0, 255, 0.8) 0%, rgba(255, 0, 255, 0.2) 70%, transparent 100%);
+    box-shadow: 
+        0 0 20px rgba(255, 0, 255, 0.6),
+        0 0 40px rgba(255, 0, 255, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+    animation-delay: -2s;
+}
+
+.neural-node.type-3 {
+    background: radial-gradient(circle, rgba(255, 255, 0, 0.8) 0%, rgba(255, 255, 0, 0.2) 70%, transparent 100%);
+    box-shadow: 
+        0 0 20px rgba(255, 255, 0, 0.6),
+        0 0 40px rgba(255, 255, 0, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+    animation-delay: -0.5s;
+}
+
+/* Neural node size variations */
+.neural-node.small {
+    width: 8px;
+    height: 8px;
+}
+
+.neural-node.medium {
+    width: 12px;
+    height: 12px;
+}
+
+.neural-node.large {
+    width: 16px;
+    height: 16px;
+}
+
+.neural-node.xlarge {
+    width: 20px;
+    height: 20px;
+}
+
+/* Pulsing animation for nodes */
+@keyframes neuralPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 1;
+    }
+}
+
+/* Floating animation for nodes */
+@keyframes neuralFloat {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-10px) translateX(5px);
+    }
+    50% {
+        transform: translateY(5px) translateX(-5px);
+    }
+    75% {
+        transform: translateY(-5px) translateX(10px);
+    }
+}
+
+/* Apply floating animation to nodes */
+.neural-node {
+    animation: neuralPulse 3s ease-in-out infinite, neuralFloat 8s ease-in-out infinite;
+}
+
+/* Neural connection lines */
+.neural-connection {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 255, 255, 0.8) 20%, 
+        rgba(255, 255, 255, 0.9) 50%, 
+        rgba(0, 255, 255, 0.8) 80%, 
+        transparent 100%);
+    transform-origin: left center;
+    opacity: 0.6;
+    animation: connectionPulse 4s ease-in-out infinite;
+}
+
+.neural-connection.active {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 255, 0, 1) 20%, 
+        rgba(255, 255, 255, 1) 50%, 
+        rgba(0, 255, 0, 1) 80%, 
+        transparent 100%);
+    opacity: 1;
+    animation: dataFlow 2s linear infinite;
+}
+
+/* Connection pulsing animation */
+@keyframes connectionPulse {
+    0%, 100% {
+        opacity: 0.3;
+        filter: blur(0px);
+    }
+    50% {
+        opacity: 0.8;
+        filter: blur(1px);
+    }
+}
+
+/* Data flow animation */
+@keyframes dataFlow {
+    0% {
+        background-position: -100% 0;
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        background-position: 100% 0;
+        opacity: 0.5;
+    }
+}
+
+/* Particle effects for data flow */
+.neural-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: particleFlow 3s linear infinite;
+}
+
+@keyframes particleFlow {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    10% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    90% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+}
+
+/* Neural layer containers */
+.neural-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.neural-layer.layer-1 {
+    z-index: -10;
+    opacity: 0.8;
+}
+
+.neural-layer.layer-2 {
+    z-index: -9;
+    opacity: 0.6;
+}
+
+.neural-layer.layer-3 {
+    z-index: -8;
+    opacity: 0.4;
+}
+
+/* Ambient glow effects */
+.neural-glow {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+    animation: ambientGlow 6s ease-in-out infinite;
+}
+
+@keyframes ambientGlow {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.1;
+    }
+}
+
+/* Performance optimizations */
+.neural-background * {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .neural-node {
+        animation-duration: 4s;
+    }
+    
+    .neural-connection {
+        height: 1px;
+    }
+    
+    .neural-particle {
+        width: 3px;
+        height: 3px;
+    }
+}
+
+@media (max-width: 480px) {
+    .neural-node.xlarge {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .neural-node.large {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .neural-connection {
+        opacity: 0.4;
+    }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .neural-node,
+    .neural-connection,
+    .neural-particle {
+        animation-duration: 10s;
+        animation-iteration-count: 1;
+    }
+    
+    .neural-glow {
+        animation: none;
+    }
+}

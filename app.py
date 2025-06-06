@@ -20,10 +20,10 @@ from config.constants import PANEL_SPECS, UI_CONFIG
 
 # Configure page
 st.set_page_config(
-    page_title="Solar Rooftop Analysis Tool",
-    page_icon="☀️",
+    page_title="🌞 AI Solar Analysis Platform",
+    page_icon="🌞",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Initialize session state
