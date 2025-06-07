@@ -126,9 +126,16 @@ class SolarAIApp {
             if (result.success) {
                 this.currentImage = result.imageData;
                 this.roofAnalysis = result.analysis;
+                this.visualMarkup = result.visualMarkup;
                 this.showImagePreview(result.imageData);
+
+                // Show visual markup if available
+                if (result.visualMarkup) {
+                    this.showVisualMarkup(result.visualMarkup);
+                }
+
                 this.enableContinueButton();
-                this.showMessage('Image processed successfully!', 'success');
+                this.showMessage('Image processed successfully with visual analysis!', 'success');
             } else {
                 throw new Error(result.error);
             }
@@ -140,7 +147,7 @@ class SolarAIApp {
     showImagePreview(imageData) {
         const previewContainer = document.getElementById('image-preview-container');
         const previewImg = document.getElementById('image-preview');
-        
+
         if (previewContainer && previewImg) {
             const previewUrl = this.imageProcessor.getImagePreviewUrl(imageData);
             if (previewUrl) {
@@ -148,6 +155,38 @@ class SolarAIApp {
                 previewContainer.style.display = 'block';
             }
         }
+    }
+
+    showVisualMarkup(visualMarkup) {
+        // Create or update visual markup section
+        let markupSection = document.getElementById('visual-markup-section');
+        if (!markupSection) {
+            markupSection = document.createElement('div');
+            markupSection.id = 'visual-markup-section';
+            markupSection.className = 'visual-markup-section';
+
+            const resultsContainer = document.getElementById('results-container');
+            if (resultsContainer) {
+                resultsContainer.appendChild(markupSection);
+            }
+        }
+
+        markupSection.innerHTML = `
+            <h3>🖼️ Visual Analysis & Panel Placement</h3>
+            <p>AI-generated visual markup showing optimal solar panel placement on your roof:</p>
+
+            <div class="markup-grid">
+                ${Object.entries(visualMarkup).map(([key, markup]) => `
+                    <div class="markup-item">
+                        <h4>${markup.title}</h4>
+                        <div class="markup-image-container">
+                            <img src="${markup.dataUrl}" alt="${markup.title}" class="markup-image">
+                        </div>
+                        <p class="markup-description">${markup.description}</p>
+                    </div>
+                `).join('')}
+            </div>
+        `;
     }
 
     enableContinueButton() {
@@ -167,7 +206,14 @@ class SolarAIApp {
             if (result.success) {
                 this.currentImage = result.imageData;
                 this.roofAnalysis = result.analysis;
+                this.visualMarkup = result.visualMarkup;
                 this.showImagePreview(result.imageData);
+
+                // Show visual markup if available
+                if (result.visualMarkup) {
+                    this.showVisualMarkup(result.visualMarkup);
+                }
+
                 this.enableContinueButton();
                 this.showMessage(`Sample image loaded: ${result.sampleInfo.name}`, 'success');
             } else {
@@ -441,25 +487,26 @@ class SolarAIApp {
             this.showMessage('No analysis data available for report generation', 'error');
             return;
         }
-        
+
         try {
-            this.showMessage('Generating PDF report...', 'info');
-            
+            this.showMessage('Generating professional PDF report with visual markup...', 'info');
+
             const result = await this.pdfGenerator.generateReport(
                 this.roofAnalysis,
                 this.solarResults,
                 this.aiRecommendations,
-                this.config
+                this.config,
+                this.visualMarkup // Include visual markup in PDF
             );
-            
+
             if (result.success) {
-                this.showMessage(`Report downloaded: ${result.filename}`, 'success');
+                this.showMessage(`✅ Professional PDF report generated: ${result.filename} (${result.pages} pages)`, 'success');
             } else {
                 throw new Error(result.message);
             }
         } catch (error) {
             console.error('PDF generation failed:', error);
-            
+
             // Try fallback method
             try {
                 const fallbackResult = this.pdfGenerator.generateFallbackReport(
@@ -468,9 +515,9 @@ class SolarAIApp {
                     this.aiRecommendations,
                     this.config
                 );
-                this.showMessage(`Analysis data exported: ${fallbackResult.filename}`, 'warning');
+                this.showMessage(`⚠️ Fallback: Analysis data exported as ${fallbackResult.filename}`, 'warning');
             } catch (fallbackError) {
-                this.showMessage('Failed to generate report. Please try again.', 'error');
+                this.showMessage('❌ Failed to generate report. Please try again or check browser compatibility.', 'error');
             }
         }
     }

@@ -66,12 +66,31 @@
             <h1 class="title">🌞 Solar AI Platform</h1>
             <p class="subtitle">AI-Powered Solar Rooftop Analysis with 3D Neural Network Visualization</p>
             <div class="api-notice" id="api-notice">
-                <h3>🔑 Enhanced Features Available</h3>
-                <p>Configure your Google Gemini API key for advanced AI recommendations</p>
-                <p><strong>🔒 Security Guarantee:</strong> Your API key is stored locally in your browser only and never shared with our servers.</p>
-                <div style="margin-top: 1rem;">
-                    <button class="btn-small" onclick="showApiModal()">Configure API Key</button>
-                    <button class="btn-small btn-secondary" onclick="showSecurityDashboard()" style="margin-left: 0.5rem;">Security Status</button>
+                <h3>Unlock Advanced AI Recommendations</h3>
+                <p>Enhance your solar analysis with personalized AI insights powered by Google's Gemini AI. This optional feature provides tailored recommendations based on your specific roof characteristics and local conditions.</p>
+
+                <div class="feature-highlight">
+                    <strong>🎯 What You'll Get:</strong>
+                    <ul class="feature-list">
+                        <li>Personalized optimization strategies</li>
+                        <li>Advanced shading analysis recommendations</li>
+                        <li>Custom financial planning advice</li>
+                        <li>Location-specific installation tips</li>
+                    </ul>
+                </div>
+
+                <p><strong>🔒 Privacy First:</strong> Your API key is stored securely in your browser only and never shared with our servers. You maintain complete control over your credentials.</p>
+
+                <div class="button-group">
+                    <button class="btn-primary" onclick="showApiModal()">
+                        🚀 Enable AI Features
+                    </button>
+                    <button class="btn-secondary" onclick="showSecurityDashboard()">
+                        🔒 Security Details
+                    </button>
+                    <a href="USER_GUIDE.md#api-key-configuration-optional" target="_blank" class="btn-secondary">
+                        📖 Learn More
+                    </a>
                 </div>
             </div>
         </header>
@@ -277,22 +296,92 @@
         </section>
     </div>
     
-    <!-- API Key Modal -->
+    <!-- Enhanced API Key Modal -->
     <div id="api-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3>🔑 API Configuration</h3>
-            <p>For enhanced AI recommendations, configure your Google Gemini API key:</p>
-            <div class="form-group">
-                <label for="google-api-key">Google Gemini API Key (Optional)</label>
-                <input type="password" id="google-api-key" class="form-control" placeholder="Enter your API key">
+        <div class="modal-content api-modal-enhanced">
+            <div class="modal-header">
+                <h3>✨ Enable Advanced AI Features</h3>
+                <p class="modal-subtitle">Unlock personalized solar recommendations with Google Gemini AI</p>
             </div>
-            <p class="api-help">
-                Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a><br>
-                <strong>🔒 Security:</strong> Your key is stored locally only. <a href="API_KEY_SECURITY.md" target="_blank">Security Details</a>
-            </p>
-            <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeApiModal()">Skip</button>
-                <button class="btn" onclick="saveApiKey()">Save & Continue</button>
+
+            <div class="modal-body">
+                <div class="benefits-section">
+                    <h4>🎯 Enhanced Analysis Includes:</h4>
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🧠</span>
+                            <span>Smart optimization strategies</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">📊</span>
+                            <span>Advanced performance insights</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">💡</span>
+                            <span>Custom installation tips</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">🌍</span>
+                            <span>Location-specific advice</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="google-api-key">Google Gemini API Key</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="google-api-key" class="form-control enhanced"
+                                   placeholder="AIzaSy..." autocomplete="off">
+                            <span class="input-icon">🔑</span>
+                        </div>
+                        <div class="form-hint">
+                            <span class="hint-icon">💡</span>
+                            <span>This is completely optional - the platform works great without it too!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setup-guide">
+                    <h4>🚀 Quick Setup (2 minutes):</h4>
+                    <ol class="setup-steps">
+                        <li>
+                            <span class="step-number">1</span>
+                            <span>Visit <a href="https://makersuite.google.com/app/apikey" target="_blank" class="setup-link">Google AI Studio</a></span>
+                        </li>
+                        <li>
+                            <span class="step-number">2</span>
+                            <span>Sign in with your Google account</span>
+                        </li>
+                        <li>
+                            <span class="step-number">3</span>
+                            <span>Click "Create API Key" (it's free!)</span>
+                        </li>
+                        <li>
+                            <span class="step-number">4</span>
+                            <span>Copy and paste the key above</span>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="security-assurance">
+                    <div class="security-badge">
+                        <span class="security-icon">🔒</span>
+                        <div class="security-text">
+                            <strong>Your Privacy is Protected</strong>
+                            <p>Your API key stays in your browser only. We never see or store it on our servers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeApiModal()">
+                    Maybe Later
+                </button>
+                <button class="btn btn-primary" onclick="saveApiKey()">
+                    🚀 Enable AI Features
+                </button>
             </div>
         </div>
     </div>
