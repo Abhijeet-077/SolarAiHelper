@@ -13,7 +13,7 @@ The Solar AI Platform implements a **client-side security model** where sensitiv
 #### ✅ **No Hard-coded Keys**
 ```javascript
 // ❌ NEVER do this (hard-coded key)
-const API_KEY = "AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z";
+const API_KEY = "MY API key ";
 
 // ✅ Our implementation (user-provided)
 class AIIntegration {
