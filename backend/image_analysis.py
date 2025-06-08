@@ -1,9 +1,7 @@
 import cv2
 import numpy as np
-from PIL import Image
-import os
 import logging
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List
 
 class RoofAnalyzer:
     """Computer vision pipeline for analyzing rooftop characteristics from satellite imagery"""
@@ -27,13 +25,12 @@ class RoofAnalyzer:
             if image is None:
                 raise ValueError("Could not load image")
             
-            # Convert to RGB for processing
-            image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            # Image is already loaded in BGR format for OpenCV processing
             
             # Perform roof detection and analysis
             roof_contours = self._detect_roof_area(image)
             roof_metrics = self._calculate_roof_metrics(image, roof_contours)
-            orientation = self._estimate_roof_orientation(image, roof_contours)
+            orientation = self._estimate_roof_orientation(roof_contours)
             slope = self._estimate_roof_slope(image, roof_contours)
             shading_factor = self._analyze_shading(image)
             obstructions = self._detect_obstructions(image, roof_contours)
@@ -166,7 +163,7 @@ class RoofAnalyzer:
                 'confidence': 0.3
             }
     
-    def _estimate_roof_orientation(self, image: np.ndarray, contours: List[np.ndarray]) -> str:
+    def _estimate_roof_orientation(self, contours: List[np.ndarray]) -> str:
         """Estimate primary roof orientation"""
         
         try:
@@ -226,15 +223,15 @@ class RoofAnalyzer:
             # Analyze gradient within roof area
             if contours:
                 mask = np.zeros(gray.shape, np.uint8)
-                cv2.fillPoly(mask, contours, 255)
+                cv2.fillPoly(mask, contours, (255,))
                 roof_gradients = gradient_magnitude[mask > 0]
-                
+
                 # Use gradient statistics to estimate slope
                 mean_gradient = np.mean(roof_gradients)
-                
+
                 # Map gradient to slope (empirical relationship)
                 # Higher gradients suggest steeper roofs
-                slope_degrees = min(45.0, max(5.0, mean_gradient * 0.5))
+                slope_degrees = min(45.0, max(5.0, float(mean_gradient * 0.5)))
             else:
                 slope_degrees = 25.0  # Average residential roof slope
                 
@@ -280,7 +277,7 @@ class RoofAnalyzer:
             # Create mask for roof area
             if roof_contours:
                 mask = np.zeros(image.shape[:2], np.uint8)
-                cv2.fillPoly(mask, roof_contours, 255)
+                cv2.fillPoly(mask, roof_contours, (255,))
                 
                 # Convert to grayscale
                 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

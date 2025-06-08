@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Background Demo - Solar AI Platform</title>
+    <style>
+        /* Import Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        /* Neural Network Background */
+        .neural-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, #0a0a0a 0%, #000000 100%);
+            z-index: -2;
+            overflow: hidden;
+        }
+        
+        .neural-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        /* Content Container */
+        .content {
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Demo Card */
+        .demo-card {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 255, 255, 0.2),
+                inset 0 0 20px rgba(0, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            max-width: 800px;
+            text-align: center;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 12px 40px rgba(0, 255, 255, 0.3),
+                inset 0 0 30px rgba(0, 255, 255, 0.1);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+        
+        .demo-title {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ffff, #00ff00, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { filter: brightness(1) drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+            100% { filter: brightness(1.2) drop-shadow(0 0 20px rgba(0, 255, 255, 0.8)); }
+        }
+        
+        .demo-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .demo-button {
+            background: linear-gradient(45deg, #00ffff, #00ff00);
+            color: #000000;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(0, 255, 255, 0.4),
+                0 0 20px rgba(0, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0.5rem;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(0, 255, 255, 0.6),
+                0 0 30px rgba(0, 255, 255, 0.4);
+            background: linear-gradient(45deg, #00ff00, #ff00ff);
+            border-color: rgba(0, 255, 0, 0.7);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            border-color: rgba(0, 255, 255, 0.5);
+            transform: translateY(-3px);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-description {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Neural Network Background -->
+    <div class="neural-background">
+        <canvas class="neural-canvas" id="neuralCanvas"></canvas>
+    </div>
+    
+    <!-- Content -->
+    <div class="content">
+        <div class="demo-card">
+            <h1 class="demo-title">🧠 Neural Network Background</h1>
+            <p class="demo-subtitle">Live Animated AI-Themed Background for Solar AI Platform</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <div class="feature-title">Dynamic Neural Nodes</div>
+                    <div class="feature-description">Animated neurons with pulsing effects and smooth floating movement</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Data Flow Animation</div>
+                    <div class="feature-description">Glowing connections with particle trails simulating neural activity</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Neon Color Scheme</div>
+                    <div class="feature-description">Electric blue, neon green, and purple accents on deep black background</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🖱️</div>
+                    <div class="feature-title">Mouse Interaction</div>
+                    <div class="feature-description">Nodes respond to mouse movement with subtle parallax effects</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <a href="http://localhost:8503" class="demo-button">🚀 Launch Solar AI Platform</a>
+                <a href="#" class="demo-button" onclick="toggleAnimation()">⏸️ Toggle Animation</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Neural Network Animation
+        class NeuralDemo {
+            constructor() {
+                this.canvas = document.getElementById('neuralCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.nodes = [];
+                this.connections = [];
+                this.particles = [];
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.animationId = null;
+                this.isAnimating = true;
+                
+                this.init();
+            }
+            
+            init() {
+                this.resizeCanvas();
+                this.generateNodes();
+                this.generateConnections();
+                this.generateParticles();
+                this.bindEvents();
+                this.animate();
+            }
+            
+            resizeCanvas() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+            
+            generateNodes() {
+                this.nodes = [];
+                const nodeCount = Math.floor((this.canvas.width * this.canvas.height) / 15000);
+                const colors = ['#00ffff', '#00ff00', '#ff00ff', '#ffff00'];
+                
+                for (let i = 0; i < nodeCount; i++) {
+                    this.nodes.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        radius: 3 + Math.random() * 8,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        pulse: Math.random() * Math.PI * 2,
+                        pulseSpeed: 0.01 + Math.random() * 0.02,
+                        opacity: 0.6 + Math.random() * 0.4
+                    });
+                }
+            }
+            
+            generateConnections() {
+                this.connections = [];
+                const maxDistance = 150;
+                
+                this.nodes.forEach((node, i) => {
+                    let connectionCount = 0;
+                    this.nodes.forEach((otherNode, j) => {
+                        if (i !== j && connectionCount < 3) {
+                            const distance = Math.sqrt(
+                                Math.pow(node.x - otherNode.x, 2) + 
+                                Math.pow(node.y - otherNode.y, 2)
+                            );
+                            
+                            if (distance < maxDistance) {
+                                this.connections.push({
+                                    from: node,
+                                    to: otherNode,
+                                    opacity: Math.max(0.1, 1 - distance / maxDistance),
+                                    pulse: Math.random() * Math.PI * 2,
+                                    pulseSpeed: 0.005 + Math.random() * 0.01,
+                                    active: Math.random() < 0.3,
+                                    dataFlow: 0
+                                });
+                                connectionCount++;
+                            }
+                        }
+                    });
+                });
+            }
+            
+            generateParticles() {
+                this.particles = [];
+                for (let i = 0; i < 20; i++) {
+                    if (this.connections.length > 0) {
+                        const connection = this.connections[Math.floor(Math.random() * this.connections.length)];
+                        this.particles.push({
+                            connection: connection,
+                            progress: Math.random(),
+                            speed: 0.005 + Math.random() * 0.01,
+                            size: 2 + Math.random() * 3,
+                            opacity: 0.8
+                        });
+                    }
+                }
+            }
+            
+            update() {
+                // Update nodes
+                this.nodes.forEach(node => {
+                    node.x += node.vx;
+                    node.y += node.vy;
+                    
+                    if (node.x < 0 || node.x > this.canvas.width) node.vx *= -1;
+                    if (node.y < 0 || node.y > this.canvas.height) node.vy *= -1;
+                    
+                    node.pulse += node.pulseSpeed;
+                    
+                    // Mouse interaction
+                    const mouseDistance = Math.sqrt(
+                        Math.pow(node.x - this.mouseX, 2) + 
+                        Math.pow(node.y - this.mouseY, 2)
+                    );
+                    
+                    if (mouseDistance < 100) {
+                        const force = (100 - mouseDistance) / 100;
+                        node.vx += (node.x - this.mouseX) * force * 0.001;
+                        node.vy += (node.y - this.mouseY) * force * 0.001;
+                    }
+                });
+                
+                // Update connections
+                this.connections.forEach(connection => {
+                    connection.pulse += connection.pulseSpeed;
+                    if (connection.active) {
+                        connection.dataFlow += 0.02;
+                        if (connection.dataFlow > 1) {
+                            connection.dataFlow = 0;
+                            connection.active = Math.random() < 0.1;
+                        }
+                    } else {
+                        connection.active = Math.random() < 0.005;
+                    }
+                });
+                
+                // Update particles
+                this.particles.forEach(particle => {
+                    particle.progress += particle.speed;
+                    if (particle.progress > 1) {
+                        particle.progress = 0;
+                        if (this.connections.length > 0) {
+                            particle.connection = this.connections[Math.floor(Math.random() * this.connections.length)];
+                        }
+                    }
+                });
+            }
+            
+            render() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw connections
+                this.connections.forEach(connection => {
+                    const pulseOpacity = connection.opacity * (0.5 + Math.sin(connection.pulse) * 0.3);
+                    this.ctx.globalAlpha = pulseOpacity;
+                    this.ctx.strokeStyle = connection.active ? '#00ff00' : '#ffffff';
+                    this.ctx.lineWidth = connection.active ? 2 : 1;
+                    
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(connection.from.x, connection.from.y);
+                    this.ctx.lineTo(connection.to.x, connection.to.y);
+                    this.ctx.stroke();
+                    
+                    if (connection.active && connection.dataFlow > 0) {
+                        const flowX = connection.from.x + (connection.to.x - connection.from.x) * connection.dataFlow;
+                        const flowY = connection.from.y + (connection.to.y - connection.from.y) * connection.dataFlow;
+                        
+                        this.ctx.globalAlpha = 1;
+                        this.ctx.fillStyle = '#ffffff';
+                        this.ctx.beginPath();
+                        this.ctx.arc(flowX, flowY, 3, 0, Math.PI * 2);
+                        this.ctx.fill();
+                    }
+                });
+                
+                // Draw nodes
+                this.nodes.forEach(node => {
+                    const pulseScale = 1 + Math.sin(node.pulse) * 0.3;
+                    const radius = node.radius * pulseScale;
+                    
+                    const gradient = this.ctx.createRadialGradient(
+                        node.x, node.y, 0,
+                        node.x, node.y, radius * 2
+                    );
+                    gradient.addColorStop(0, node.color + 'CC');
+                    gradient.addColorStop(0.7, node.color + '44');
+                    gradient.addColorStop(1, 'transparent');
+                    
+                    this.ctx.globalAlpha = node.opacity * 0.5;
+                    this.ctx.fillStyle = gradient;
+                    this.ctx.beginPath();
+                    this.ctx.arc(node.x, node.y, radius * 2, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    
+                    this.ctx.globalAlpha = node.opacity;
+                    this.ctx.fillStyle = node.color;
+                    this.ctx.beginPath();
+                    this.ctx.arc(node.x, node.y, radius * 0.5, 0, Math.PI * 2);
+                    this.ctx.fill();
+                });
+                
+                // Draw particles
+                this.particles.forEach(particle => {
+                    if (particle.connection) {
+                        const { from, to } = particle.connection;
+                        const x = from.x + (to.x - from.x) * particle.progress;
+                        const y = from.y + (to.y - from.y) * particle.progress;
+                        
+                        this.ctx.globalAlpha = particle.opacity;
+                        this.ctx.fillStyle = '#ffffff';
+                        this.ctx.beginPath();
+                        this.ctx.arc(x, y, particle.size, 0, Math.PI * 2);
+                        this.ctx.fill();
+                    }
+                });
+                
+                this.ctx.globalAlpha = 1;
+            }
+            
+            animate() {
+                if (this.isAnimating) {
+                    this.update();
+                    this.render();
+                }
+                this.animationId = requestAnimationFrame(() => this.animate());
+            }
+            
+            bindEvents() {
+                document.addEventListener('mousemove', (e) => {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+                });
+                
+                window.addEventListener('resize', () => {
+                    this.resizeCanvas();
+                    this.generateNodes();
+                    this.generateConnections();
+                });
+            }
+            
+            toggleAnimation() {
+                this.isAnimating = !this.isAnimating;
+            }
+        }
+        
+        // Initialize
+        const neuralDemo = new NeuralDemo();
+        
+        function toggleAnimation() {
+            neuralDemo.toggleAnimation();
+        }
+        
+        console.log('🧠 Neural Network Demo loaded!');
+    </script>
+</body>
+</html>

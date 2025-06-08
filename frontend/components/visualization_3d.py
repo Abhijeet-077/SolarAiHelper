@@ -4,6 +4,7 @@ Creates interactive Three.js-based roof modeling with solar panel simulation
 """
 
 import streamlit as st
+import streamlit.components.v1 as components
 import json
 from typing import Dict, Any, List
 import base64
@@ -233,7 +234,7 @@ class Solar3DVisualizer:
         })
         
         # Display the 3D scene
-        st.components.v1.html(threejs_html, height=500)
+        components.html(threejs_html, height=500)
     
     def _generate_threejs_html(self, scene_data: Dict[str, Any], 
                               options: Dict[str, Any]) -> str:
@@ -522,27 +523,35 @@ class Solar3DVisualizer:
         
         return vertices
     
-    def _generate_panel_layout(self, roof_width: float, roof_length: float, 
+    def _generate_panel_layout(self, roof_width: float, roof_length: float,
                               roof_analysis: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Generate optimal panel layout for 3D visualization"""
-        
+
         # Standard residential panel dimensions (feet)
         panel_width = 3.25
         panel_length = 5.5
         panel_spacing = 0.5
-        
+
         # Calculate grid
         panels_per_row = int((roof_width - panel_spacing) / (panel_width + panel_spacing))
         panel_rows = int((roof_length - panel_spacing) / (panel_length + panel_spacing))
-        
+
+        # Get shading factor from roof analysis
+        base_shading = roof_analysis.get('shading_analysis', {}).get('shadow_percentage', 10) / 100
+
         layout = []
         panel_id = 1
-        
+
         for row in range(panel_rows):
             for col in range(panels_per_row):
                 x_pos = (col - panels_per_row / 2) * (panel_width + panel_spacing)
                 z_pos = (row - panel_rows / 2) * (panel_length + panel_spacing)
-                
+
+                # Calculate position-based efficiency and shading
+                distance_from_center = ((row - panel_rows/2)**2 + (col - panels_per_row/2)**2)**0.5
+                efficiency = 0.95 - (distance_from_center * 0.005)  # Slight efficiency variation
+                shading_factor = max(0.7, 1.0 - base_shading - (distance_from_center * 0.01))
+
                 panel = {
                     "id": panel_id,
                     "position": {"x": x_pos, "y": 0.1, "z": z_pos},
@@ -552,13 +561,13 @@ class Solar3DVisualizer:
                         "length": panel_length,
                         "thickness": 0.15
                     },
-                    "efficiency": 0.95 - (row * 0.01),  # Slight efficiency variation
-                    "shading_factor": 1.0
+                    "efficiency": efficiency,
+                    "shading_factor": shading_factor
                 }
-                
+
                 layout.append(panel)
                 panel_id += 1
-        
+
         return layout
     
     def _get_panel_specifications(self) -> Dict[str, Any]:
@@ -681,12 +690,14 @@ try:
     import numpy as np
 except ImportError:
     # Fallback for basic math operations
-    class np:
+    import math
+
+    class NumpyFallback:
         @staticmethod
         def tan(x):
-            import math
             return math.tan(x)
         @staticmethod
         def radians(x):
-            import math
             return math.radians(x)
+
+    np = NumpyFallback()

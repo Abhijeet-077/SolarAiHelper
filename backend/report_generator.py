@@ -148,10 +148,13 @@ class ReportGenerator:
         story.append(Spacer(1, 0.5*inch))
         
         # Property information table
+        location = results.get('location', {})
+        analysis_timestamp = results.get('analysis_timestamp', datetime.now())
+
         property_data = [
             ['Report Generated:', datetime.now().strftime('%B %d, %Y at %I:%M %p')],
-            ['Location:', f"{results['location']['latitude']:.4f}°, {results['location']['longitude']:.4f}°"],
-            ['Analysis Date:', results['analysis_timestamp'].strftime('%B %d, %Y')],
+            ['Location:', f"{location.get('latitude', 0):.4f}°, {location.get('longitude', 0):.4f}°"],
+            ['Analysis Date:', analysis_timestamp.strftime('%B %d, %Y') if hasattr(analysis_timestamp, 'strftime') else str(analysis_timestamp)],
         ]
         
         property_table = Table(property_data, colWidths=[2*inch, 4*inch])
@@ -204,8 +207,8 @@ class ReportGenerator:
         story = []
         story.append(Paragraph("Executive Summary", self.styles['CustomTitle']))
         
-        solar_potential = results['solar_potential']
-        roof_metrics = results['roof_metrics']
+        solar_results = results.get('solar_results', {})
+        roof_analysis = results.get('roof_analysis', {})
         
         # Summary text
         summary_text = f"""
