@@ -1,0 +1,82 @@
+{
+  "timestamp": "2025-06-06T18:50:56.672Z",
+  "filesScanned": 17,
+  "totalFindings": 9,
+  "criticalFindings": 8,
+  "highFindings": 1,
+  "mediumFindings": 0,
+  "findings": [
+    {
+      "file": "docs\\js\\ai-integration.js",
+      "line": 376,
+      "content": "'AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z' // Common example key",
+      "match": "AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z",
+      "description": "Google API Key detected",
+      "severity": "critical"
+    },
+    {
+      "file": "docs\\js\\ai-integration.js",
+      "line": 376,
+      "content": "'AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z' // Common example key",
+      "match": "'AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z'",
+      "description": "Suspicious pattern detected",
+      "severity": "critical"
+    },
+    {
+      "file": "docs\\SECURITY_GUIDE.md",
+      "line": 16,
+      "content": "const API_KEY = \"AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z\";",
+      "match": "AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z",
+      "description": "Google API Key detected",
+      "severity": "critical"
+    },
+    {
+      "file": "docs\\SECURITY_GUIDE.md",
+      "line": 16,
+      "content": "const API_KEY = \"AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z\";",
+      "match": "\"AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z\"",
+      "description": "Suspicious pattern detected",
+      "severity": "critical"
+    },
+    {
+      "file": "docs\\SECURITY_GUIDE.md",
+      "line": 66,
+      "content": "const GOOGLE_API_KEY = \"AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z\";",
+      "match": "AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z",
+      "description": "Google API Key detected",
+      "severity": "critical"
+    },
+    {
+      "file": "docs\\SECURITY_GUIDE.md",
+      "line": 66,
+      "content": "const GOOGLE_API_KEY = \"AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z\";",
+      "match": "\"AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z\"",
+      "description": "Suspicious pattern detected",
+      "severity": "critical"
+    },
+    {
+      "file": "docs\\SECURITY_GUIDE.md",
+      "line": 71,
+      "content": "const API_KEY = \"AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z\";",
+      "match": "AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z",
+      "description": "Google API Key detected",
+      "severity": "critical"
+    },
+    {
+      "file": "docs\\SECURITY_GUIDE.md",
+      "line": 71,
+      "content": "const API_KEY = \"AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z\";",
+      "match": "\"AIzaSyC4K8B9X2M5N7P1Q3R6S8T0U2V4W6X8Y0Z\"",
+      "description": "Suspicious pattern detected",
+      "severity": "critical"
+    },
+    {
+      "file": "docs\\SECURITY_GUIDE.md",
+      "line": 153,
+      "content": "? process.env.GOOGLE_API_KEY",
+      "match": "process.env.GOOGLE_API_KEY",
+      "description": "Environment variable reference",
+      "severity": "high"
+    }
+  ]
+}
