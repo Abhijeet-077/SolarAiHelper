@@ -15,7 +15,7 @@ class LLMGenerator:
     def _setup_api(self):
         """Initialize Google LLM API"""
         try:
-            api_key = os.getenv("GOOGLE_LLM_API_KEY")
+            api_key = os.getenv("Your API key ")
             if not api_key:
                 raise ValueError("Google LLM API key not found")
             
